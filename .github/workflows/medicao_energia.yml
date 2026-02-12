@@ -9,4 +9,4 @@
         run: |
           # Garante que as dependências do Go estão ok antes de medir
           go mod tidy
-          sudo python3 measure_energy.py --cmd "go test ./..."
+          sudo python3 measure_energy.py --cmd "go test ./..." 
