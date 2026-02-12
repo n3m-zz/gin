@@ -1,0 +1,12 @@
+- name: Instalar Dependências
+        run: |
+          # Só tenta instalar se o arquivo existir, evita o Exit Code 1
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          # Instala a lib de medição se você for usar no script
+          pip install py3-rapl || true 
+
+      - name: Executar Medição de Energia
+        run: |
+          # Garante que as dependências do Go estão ok antes de medir
+          go mod tidy
+          sudo python3 measure_energy.py --cmd "go test ./..."
