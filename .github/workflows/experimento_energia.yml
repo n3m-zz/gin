@@ -2,7 +2,7 @@ name: Experimento de Energia - PhD Maycon
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
   workflow_dispatch: # Permite rodar manualmente pelo botão no GitHub
 
 jobs:
