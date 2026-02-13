@@ -1,7 +1,39 @@
-- name: Executar Medição de Energia (Perf)
+name: Medição de Energia (Doutorado)
+
+# Define quando vai rodar (a cada push)
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  experimento-energia:
+    # IMPORTANTE: self-hosted para rodar no seu Zorin e ter acesso ao Hardware/Perf
+    runs-on: self-hosted
+    
+    steps:
+      # 1. Baixa o código do repositório
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      # 2. Instala dependências (se houver)
+      - name: Instalar Dependências
         run: |
+          if [ -f requirements.txt ]; then pip3 install -r requirements.txt; fi
+
+      # 3. Executa a medição (O bloco que você estava tentando ajustar)
+      - name: Executar Medição de Energia (Perf)
+        run: |
+          # Garante dependências do Go (se for o caso)
           if [ -f go.mod ]; then go mod tidy; fi
           
-          # Não precisa de sudo se você rodou o sysctl paranoid=-1 no host
-          # Se não rodou, precisa de sudo aqui.
+          # Roda o script wrapper que chama o perf
+          # Certifique-se de que measure_energy.py está na raiz do repo
           python3 measure_energy.py --cmd "go test ./..." --output "dados_doutorado.csv"
+
+      # 4. Salva o CSV gerado para você baixar depois no GitHub
+      - name: Upload dos Resultados
+        if: always() # Executa mesmo se o teste falhar
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorio-energia
+          path: dados_doutorado.csv
