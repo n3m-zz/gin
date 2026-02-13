@@ -15,6 +15,12 @@ jobs:
       - name: Checkout do código
         uses: actions/checkout@v4
 
+      - name: Configurar Go 1.24
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24.0'
+          cache: true  
+
       # 2. Instala dependências (se houver)
       - name: Instalar Dependências
         run: |
@@ -28,7 +34,8 @@ jobs:
           
           # Roda o script wrapper que chama o perf
           # Certifique-se de que measure_energy.py está na raiz do repo
-          python3 measure_energy.py --cmd "go test ./..." --output "dados_doutorado.csv"
+          GO_PATH=$(which go)
+          sudo python3 measure_energy.py --cmd "$GO_PATH test ./..." --output "dados_doutorado.csv"
 
       # 4. Salva o CSV gerado para você baixar depois no GitHub
       - name: Upload dos Resultados
